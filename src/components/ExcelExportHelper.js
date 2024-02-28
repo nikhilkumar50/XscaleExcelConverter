@@ -5,7 +5,7 @@ import * as XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
 const ExcelExportHelper = ({ data }) => {
   const createDownLoadData = () => {
     handleExport().then((url) => {
-      console.log(url);
+      
       const downloadAnchorNode = document.createElement("a");
       downloadAnchorNode.setAttribute("href", url);
       downloadAnchorNode.setAttribute("download", "student_report.xlsx");
@@ -38,15 +38,12 @@ const ExcelExportHelper = ({ data }) => {
     // create an ArrayBuffer with a size in bytes
     const buf = new ArrayBuffer(s.length);
 
-    console.log(buf);
-
+    
     //create a 8 bit integer array
     const view = new Uint8Array(buf);
 
-    console.log(view);
     //charCodeAt The charCodeAt() method returns an integer between 0 and 65535 representing the UTF-16 code
     for (let i = 0; i !== s.length; ++i) {
-      console.log(s.charCodeAt(i));
       view[i] = s.charCodeAt(i);
     }
 
@@ -84,6 +81,12 @@ const ExcelExportHelper = ({ data }) => {
     data.forEach((row) => {
       const studentDetails = row.STUDENT_DETAILS;
       const marksDetails = row.MARKS;
+      const total=parseInt(marksDetails.maths) +
+      parseInt(marksDetails.physics) +
+      parseInt(marksDetails.chemistry) +
+      parseInt(marksDetails.english) +
+      parseInt(marksDetails.computerScience);
+
 
       table1.push({
         A: studentDetails.id,
@@ -103,12 +106,7 @@ const ExcelExportHelper = ({ data }) => {
         E: marksDetails.chemistry,
         F: marksDetails.english,
         G: marksDetails.computerScience,
-        H:
-          marksDetails.maths +
-          marksDetails.physics +
-          marksDetails.chemistry +
-          marksDetails.english +
-          marksDetails.computerScience,
+        H:total,
       });
     });
 
@@ -120,7 +118,6 @@ const ExcelExportHelper = ({ data }) => {
 
     const finalData = [...title, ...table1];
 
-    console.log(finalData);
 
     //create a new workbook
     const wb = XLSX.utils.book_new();

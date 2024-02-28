@@ -1,138 +1,220 @@
-import React from "react";
+import React, { useState } from "react";
 import ExcelExportHelper from "./components/ExcelExportHelper";
-
-const DATA = [
-  {
-    STUDENT_DETAILS: {
-      id: 101,
-      name: "Suman Kumar",
-      parentName: "Suresh Kumar",
-      classroom: "12th",
-      subject: "Non Medical",
-      division: "1st",
-      status: "Pass",
-    },
-    MARKS: {
-      maths: 75,
-      physics: 65,
-      chemistry: 72,
-      english: 62,
-      computerScience: 80,
-    },
-  },
-  {
-    STUDENT_DETAILS: {
-      id: 102,
-      name: "Rahul Kumar",
-      parentName: "Aatma Ram",
-      classroom: "12th",
-      subject: "Non Medical",
-      division: "1st",
-      status: "Pass",
-    },
-    MARKS: {
-      maths: 70,
-      physics: 75,
-      chemistry: 82,
-      english: 72,
-      computerScience: 60,
-    },
-  },
-  {
-    STUDENT_DETAILS: {
-      id: 103,
-      name: "Anuj Kumar",
-      parentName: "Ashok Kumar",
-      classroom: "12th",
-      subject: "Non Medical",
-      division: "1st",
-      status: "Pass",
-    },
-    MARKS: {
-      maths: 60,
-      physics: 65,
-      chemistry: 92,
-      english: 77,
-      computerScience: 80,
-    },
-  },
-];
+import "./App.css"; 
+import { Link } from "react-router-dom";
 
 const App = () => {
+  const [students, setStudents] = useState([]);
+
+  const handleChange = (e, index, key, section) => {
+    const { value } = e.target;
+    const updatedStudents = [...students];
+    updatedStudents[index][section][key] = value;
+    setStudents(updatedStudents);
+  };
+
+  const handleAddStudent = () => {
+    setStudents([
+      ...students,
+      {
+        STUDENT_DETAILS: {
+          id: "",
+          name: "",
+          parentName: "",
+          classroom: "",
+          subject: "",
+          division: "",
+          status: "",
+        },
+        MARKS: {
+          maths: "",
+          physics: "",
+          chemistry: "",
+          english: "",
+          computerScience: "",
+          
+        },
+      },
+    ]);
+  };
+
+  const handleRemoveStudent = (index) => {
+    const updatedStudents = [...students];
+    updatedStudents.splice(index, 1);
+    setStudents(updatedStudents);
+  };
+
   return (
-    <div style={{ padding: "30px" }}>
-      <ExcelExportHelper data={DATA} />
+    <div className="container">
+      <ExcelExportHelper data={students} />
       <h3>Student Details</h3>
-      <table class="table table-bordered">
-        <thead style={{ background: "yellow" }}>
-          <tr>
-            <th scope="col">Enrolment No.</th>
-            <th scope="col">Student Name</th>
-            <th scope="col">Parent Name</th>
-            <th scope="col">Class</th>
-            <th scope="col">Subject</th>
-            <th scope="col">Division</th>
-            <th scope="col">Result Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {DATA.map((studentsData) => (
+      <button className="btn btn-primary mb-3" onClick={handleAddStudent}>
+        Add Student
+      </button>
+      <div className="table-responsive">
+        <table className="table table-bordered table-striped">
+          <thead>
             <tr>
-              <td>
-                <strong>{studentsData.STUDENT_DETAILS.id}</strong>{" "}
-              </td>
-              <td>{studentsData.STUDENT_DETAILS.name}</td>
-              <td>{studentsData.STUDENT_DETAILS.parentName}</td>
-              <td>{studentsData.STUDENT_DETAILS.classroom}</td>
-              <td>{studentsData.STUDENT_DETAILS.subject}</td>
-              <td>{studentsData.STUDENT_DETAILS.division}</td>
-              <td>
-                <strong>{studentsData.STUDENT_DETAILS.status}</strong>
-              </td>
+              <th>Enrollment No.</th>
+              <th>Student Name</th>
+              <th>Parent Name</th>
+              <th>Classroom</th>
+              <th>Subject</th>
+              <th>Division</th>
+              <th>Result Status</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {students.map((student, index) => (
+              <tr key={index}>
+                <td>
+                  <input
+                    type="text"
+                    value={student.STUDENT_DETAILS.id}
+                    onChange={(e) => handleChange(e, index, "id", "STUDENT_DETAILS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.STUDENT_DETAILS.name}
+                    onChange={(e) => handleChange(e, index, "name", "STUDENT_DETAILS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.STUDENT_DETAILS.parentName}
+                    onChange={(e) => handleChange(e, index, "parentName", "STUDENT_DETAILS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.STUDENT_DETAILS.classroom}
+                    onChange={(e) => handleChange(e, index, "classroom", "STUDENT_DETAILS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.STUDENT_DETAILS.subject}
+                    onChange={(e) => handleChange(e, index, "subject", "STUDENT_DETAILS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.STUDENT_DETAILS.division}
+                    onChange={(e) => handleChange(e, index, "division", "STUDENT_DETAILS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.STUDENT_DETAILS.status}
+                    onChange={(e) => handleChange(e, index, "status", "STUDENT_DETAILS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <button className="btn btn-danger" onClick={() => handleRemoveStudent(index)}>
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <h3>Marks</h3>
-      <table class="table table-bordered">
-        <thead style={{ background: "gray", color: "#fff" }}>
-          <tr>
-            <th scope="col">Enrolment No.</th>
-            <th scope="col">Student Name</th>
-            <th scope="col">Mathematics</th>
-            <th scope="col">Physics</th>
-            <th scope="col">Chemistry</th>
-            <th scope="col">English</th>
-            <th scope="col">Computer Science</th>
-            <th scope="col">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {DATA.map((studentsData) => (
+      <div className="table-responsive">
+        <table className="table table-bordered table-striped">
+          <thead>
             <tr>
-              <td>
-                <strong>{studentsData.STUDENT_DETAILS.id}</strong>
-              </td>
-              <td>{studentsData.STUDENT_DETAILS.name}</td>
-              <td>{studentsData.MARKS.maths}</td>
-              <td>{studentsData.MARKS.physics}</td>
-              <td>{studentsData.MARKS.chemistry}</td>
-              <td>{studentsData.MARKS.english}</td>
-              <td>{studentsData.MARKS.computerScience}</td>
-              <td>
-                <strong>
-                  {" "}
-                  {studentsData.MARKS.maths +
-                    studentsData.MARKS.physics +
-                    studentsData.MARKS.chemistry +
-                    studentsData.MARKS.english +
-                    studentsData.MARKS.computerScience}
-                </strong>
-              </td>
+              <th>Enrollment No.</th>
+              <th>Student Name</th>
+              <th>Mathematics</th>
+              <th>Physics</th>
+              <th>Chemistry</th>
+              <th>English</th>
+              <th>Computer Science</th>
+              
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {students.map((student, index) => (
+              <tr key={index}>
+                <td>
+                  <input
+                    type="text"
+                    value={student.STUDENT_DETAILS.id}
+                    onChange={(e) => handleChange(e, index, "id", "STUDENT_DETAILS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.STUDENT_DETAILS.name}
+                    onChange={(e) => handleChange(e, index, "name", "STUDENT_DETAILS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.MARKS.maths}
+                    onChange={(e) => handleChange(e, index, "maths", "MARKS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.MARKS.physics}
+                    onChange={(e) => handleChange(e, index, "physics", "MARKS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.MARKS.chemistry}
+                    onChange={(e) => handleChange(e, index, "chemistry", "MARKS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.MARKS.english}
+                    onChange={(e) => handleChange(e, index, "english", "MARKS")}
+                    className="form-control"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={student.MARKS.computerScience}
+                    onChange={(e) => handleChange(e, index, "computerScience", "MARKS")}
+                    className="form-control"
+                  />
+                </td>
+                
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Link className="btn btn-primary mb-3" to="/reader">Get Report</Link>
     </div>
   );
 };
